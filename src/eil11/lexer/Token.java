@@ -126,7 +126,7 @@ public final class Token {
      * @param ancil The ancilliary data stored in the Token
      * @return the Token if it exists inside the Map, or the token if it is created
      */
-    private Token of(Type type, String ancil){
+    public Token of(Type type, String ancil){
         Token returnToken;
 
         Optional<String> opt;
