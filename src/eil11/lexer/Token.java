@@ -13,11 +13,11 @@ public final class Token {
         NOT ("(?i)not", false),
         AND ("(?i)and", false),
         OR ("(?i)or", false),
-        OPEN ("(", false),
-        CLOSE (")", false),
+        OPEN ("\\(", false),
+        CLOSE ("\\)", false),
         ID ("(D)+[dD_]+", true),
         NUMBER ("(-)?\\d+", true),
-        BINARYOP ("[+-*/]", true),
+        BINARYOP ("[\\+\\-\\*\\/]", true),
         WHITESPACE ("\\s+", false);
 
         private final String pattern;
@@ -45,53 +45,7 @@ public final class Token {
         return data;
     }
 
-    public boolean equals(Token comp){
-        return (this.hashCode() == comp.hashCode());
-    }
-
-    public int hashCode(){
-        int multiplier = 0;
-        switch (getType()){
-            case NOT:
-                multiplier = 1;
-                break;
-            case AND:
-                multiplier = 2;
-                break;
-            case OR:
-                multiplier = 3;
-                break;
-            case OPEN:
-                multiplier = 4;
-                break;
-            case CLOSE:
-                multiplier = 5;
-                break;
-            case ID:
-                multiplier = 6;
-                break;
-            case NUMBER:
-                multiplier = 7;
-                break;
-            case BINARYOP:
-                multiplier = 8;
-                break;
-            case WHITESPACE:
-                multiplier = 9;
-                break;
-            default:
-                System.exit(1);
-        }
-
-        if (type.getHasData()) {
-            return multiplier * type.getPattern().hashCode();
-        }
-        else {
-            return multiplier * 47717;
-        }
-
-    }
-
+    @Override
     public String toString(){
         if (this.getData().isPresent())
             return this.getData().get();
@@ -115,10 +69,35 @@ public final class Token {
         }
     }
 
+    // Auto-generated
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Token token = (Token) o;
+
+        if (getType() != token.getType()) return false;
+        return getData().equals(token.getData());
+    }
+
+    // Auto-generated
+    @Override
+    public int hashCode() {
+        int result = getType().hashCode();
+        result = 31 * result + getData().hashCode();
+        return result;
+    }
+
     private Token(Type type, Optional<String> data){
         this.type = type;
-        this.data = data;
+        if (data == null)
+            this.data = Optional.empty();
+        else
+            this.data = data;
+
     }
+
 
     /**
      * Populate map with Tokens, returns the Token if already is in the map. Returns the newly created Token
@@ -126,36 +105,31 @@ public final class Token {
      * @param ancil The ancilliary data stored in the Token
      * @return the Token if it exists inside the Map, or the token if it is created
      */
-    public Token of(Type type, String ancil){
+    public static Token of(Type type, String ancil){
         Token returnToken;
-
         Optional<String> opt;
+        opt = Optional.ofNullable(ancil);
 
-        if (ancil != null)
-            opt = Optional.of(ancil);
-        else
-            opt = Optional.empty();
+        Builder searchBuilder = new Builder(type, opt);
+        Token searchToken = searchBuilder.build();
+        returnToken = tokenMap.putIfAbsent(searchBuilder, searchToken);
 
-        if (!tokenMap.isEmpty()){
-            if ((returnToken = tokenMap.get(ancil)) == null) {
-
-                returnToken = tokenMap.put(new Builder(type, opt), new Token(type, opt));
-            }
-        } else {
-            returnToken = tokenMap.put(new Builder(type, opt), new Token(type, opt));
-        }
+        returnToken = (returnToken == null) ? searchToken : returnToken;    // If returnToken null, assign it search
         return returnToken;
     }
 
     // BUILDER PRIVATE INNER CLASS
 
-    private class Builder {
+    private static class Builder {
         private final Type type;
         private final Optional<String> data;
 
         private Builder(Type type, Optional<String> data){
             this.type = type;
-            this.data = data;
+            if (data == null)
+                this.data = Optional.empty();
+            else
+                this.data = data;
         }
 
 
@@ -171,50 +145,24 @@ public final class Token {
             return new Token(getType(), getData());
         }
 
-        public int hashCode() {
-            int multiplier = 0;
-            switch (type){
-                case NOT:
-                    multiplier = 1;
-                    break;
-                case AND:
-                    multiplier = 2;
-                    break;
-                case OR:
-                    multiplier = 3;
-                    break;
-                case OPEN:
-                    multiplier = 4;
-                    break;
-                case CLOSE:
-                    multiplier = 5;
-                    break;
-                case ID:
-                    multiplier = 6;
-                    break;
-                case NUMBER:
-                    multiplier = 7;
-                    break;
-                case BINARYOP:
-                    multiplier = 8;
-                    break;
-                case WHITESPACE:
-                    multiplier = 9;
-                    break;
-                default:
-                    System.exit(1);
-            }
+        // Auto-generated
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
 
-            if (type.getHasData()) {
-                return multiplier * type.getPattern().hashCode();
-            }
-            else {
-                return multiplier * 47717;
-            }
+            Builder builder = (Builder) o;
+
+            if (getType() != builder.getType()) return false;
+            return getData().equals(builder.getData());
         }
 
-        public boolean equals(Builder comp){
-            return (this.hashCode() == comp.hashCode());
+        // Auto-generated
+        @Override
+        public int hashCode() {
+            int result = getType().hashCode();
+            result = 31 * result + getData().hashCode();
+            return result;
         }
     }
 }
