@@ -52,17 +52,17 @@ public final class Token {
         else {
             switch (getType()) {
                 case NOT:
-                    return "!";
+                    return "NOT";
                 case AND:
-                    return "&";
+                    return "AND";
                 case OR:
-                    return "|";
+                    return "OR";
                 case WHITESPACE:
                     return " ";
                 case OPEN:
-                    return "(";
+                    return "OPEN";
                 case CLOSE:
-                    return ")";
+                    return "CLOSE";
                 default:
                     return null;
             }
