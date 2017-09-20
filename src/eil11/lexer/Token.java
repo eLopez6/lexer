@@ -47,8 +47,21 @@ public final class Token {
 
     @Override
     public String toString(){
-        if (this.getData().isPresent())
-            return this.getData().get();
+        if (this.getData().isPresent()) {
+
+            switch (getType()) {
+                case ID:
+                    return "ID(" + this.getData().get() + ")";
+                case NUMBER:
+                    return "NUMBER(" + this.getData().get() + ")";
+                case BINARYOP:
+                    return "BINARYOP(" + this.getData().get() + ")";
+                default:
+                    return null;
+            }
+
+        }
+
         else {
             switch (getType()) {
                 case NOT:
