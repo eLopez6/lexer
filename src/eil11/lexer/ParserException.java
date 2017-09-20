@@ -5,6 +5,8 @@ import java.util.Optional;
 
 public final class ParserException extends Exception {
 
+    public static final long serialVersionUID = 293L;
+
     public enum ErrorCode {
         TOKEN_EXPECTED,
         INVALID_TOKEN,
