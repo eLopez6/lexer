@@ -10,32 +10,44 @@ public class Lexer {
     private final Matcher matcher;
 
     static {
-        tokenPatterns = Pattern.compile(Token.Type.NOT.getPattern());
-        tokenPatterns = Pattern.compile(Token.Type.AND.getPattern());
-        tokenPatterns = Pattern.compile(Token.Type.OR.getPattern());
-        tokenPatterns = Pattern.compile(Token.Type.OPEN.getPattern());
-        tokenPatterns = Pattern.compile(Token.Type.CLOSE.getPattern());
-        tokenPatterns = Pattern.compile(Token.Type.ID.getPattern());
-        tokenPatterns = Pattern.compile(Token.Type.NUMBER.getPattern());
-        tokenPatterns = Pattern.compile(Token.Type.BINARYOP.getPattern());
-        tokenPatterns = Pattern.compile(Token.Type.WHITESPACE.getPattern());
+        int i = 0;
+        StringBuilder pattern = new StringBuilder();
+        Token.Type typeArr[] = Token.Type.values();
+
+
+        while (true) {
+            pattern.append(typeArr[i].getPattern());
+            if (i == (typeArr.length - 1)) {
+                break;
+            }
+            pattern.append("|");
+            i++;
+        }
+        tokenPatterns = Pattern.compile(pattern.toString());
     }
 
-
     public Lexer (String input) {
-//        tokenPatterns =
+        this.matcher = tokenPatterns.matcher(input);
+
     }
 
     public Boolean hasNext() {
-
+        return matcher.find();
     }
 
     public LocationalToken next() throws ParserException {
+        if (hasNext()) {
+            return new LocationalToken(Token.of(), matcher.end());
 
+
+
+        } else {
+            throw new ParserException(ParserException.ErrorCode.TOKEN_EXPECTED);
+        }
     }
 
-    public LocationalToken next(Set<Token.Type> validTypes, Set<Token.Type> invalidTypes) throws ParserException {
-
+    public LocationalToken nextValid(Set<Token.Type> validTypes, Set<Token.Type> invalidTypes) throws ParserException {
+//        Set<LocationalToken> set = new HashSet<LocationalToken>(Collections.list(enumeration));
     }
 
 }
