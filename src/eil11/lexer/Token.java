@@ -15,7 +15,7 @@ public final class Token {
         OR ("(?i)or", false),
         OPEN ("\\(", false),
         CLOSE ("\\)", false),
-        ID ("(D)+[dD_]+", true),
+        ID ("D+", true),
         NUMBER ("(-)?\\d+", true),
         BINARYOP ("[\\+\\-\\*\\/]", true),
         WHITESPACE ("(\\\\\\\\)?\\s+", false);
