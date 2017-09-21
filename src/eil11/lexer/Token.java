@@ -18,10 +18,11 @@ public final class Token {
         ID ("(D)+[dD_]+", true),
         NUMBER ("(-)?\\d+", true),
         BINARYOP ("[\\+\\-\\*\\/]", true),
-        WHITESPACE ("\\s+", false);
+        WHITESPACE ("(\\\\\\\\)?\\s+", false);
 
         private final String pattern;
         private final Boolean hasData;
+        private boolean isComplex;
 
         Type (String pattern, Boolean hasData){
             this.pattern = pattern;
@@ -48,7 +49,6 @@ public final class Token {
     @Override
     public String toString(){
         if (this.getData().isPresent()) {
-
             switch (getType()) {
                 case ID:
                     return "ID(" + this.getData().get() + ")";
@@ -61,7 +61,6 @@ public final class Token {
             }
 
         }
-
         else {
             switch (getType()) {
                 case NOT:
@@ -109,6 +108,10 @@ public final class Token {
         else
             this.data = data;
 
+        // Setting the isComplex field
+        if (this.type == Type.AND || this.type == Type.OR) {
+            this.type.isComplex = true;
+        }
     }
 
 
