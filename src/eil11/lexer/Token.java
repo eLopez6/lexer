@@ -36,6 +36,10 @@ public final class Token {
         public Boolean getHasData() {
             return hasData;
         }
+
+        public boolean getIsComplex() {
+            return isComplex;
+        }
     }
 
     public Type getType() {

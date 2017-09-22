@@ -37,9 +37,23 @@ public class Lexer {
 
     public LocationalToken next() throws ParserException {
         if (hasNext()) {
-            return new LocationalToken(Token.of(), matcher.end());
+            Token.Type tokenType = null;
+            String match = "";
 
 
+            // Checks for all types to see which token corresponds to correct Token Type
+            for (Token.Type type : Token.Type.values()) {
+                match = matcher.group(type.getPattern());
+                tokenType = type;
+                if (!match.equals(""))
+                    break;
+            }
+
+            // No token found
+            if (match.equals(""))
+                throw new ParserException(ParserException.ErrorCode.TOKEN_EXPECTED);
+
+            return new LocationalToken(Token.of(tokenType, match), matcher.start());
 
         } else {
             throw new ParserException(ParserException.ErrorCode.TOKEN_EXPECTED);
@@ -47,7 +61,46 @@ public class Lexer {
     }
 
     public LocationalToken nextValid(Set<Token.Type> validTypes, Set<Token.Type> invalidTypes) throws ParserException {
-//        Set<LocationalToken> set = new HashSet<LocationalToken>(Collections.list(enumeration));
+        LocationalToken locToken = next();
+
+        if (invalidTypes.contains(locToken.getTokenType()))
+            throw new ParserException(locToken, ParserException.ErrorCode.INVALID_TOKEN);
+
+        if (validTypes.contains(locToken.getTokenType()))
+            return locToken;
+        else
+            return null;
+
+        // If contained in neither, do nothing. (No need for else here)
+    }
+
+    /**
+     * Measures the complexity by summing the frequency of all ANDs and ORs
+     * Resets the matcher, disrupting count. This could affect other methods.
+     * @return sum of complexity
+     */
+    public int complexityChecker() {
+        // sum all ands
+        // sum all ors
+        // return
+        String match = null;
+        Token.Type tokenType = null;
+
+        int complexitySum = 0;
+        matcher.reset();    // Resets to start point
+        while (hasNext()) {
+            // Checks for all types to see which token corresponds to correct Token Type
+            for (Token.Type type : Token.Type.values()) {
+                match = matcher.group(type.getPattern());
+                tokenType = type;
+                if (!match.equals(""))
+                    break;
+            }
+
+            if (Token.of(tokenType, match).getType().getIsComplex())
+                complexitySum++;
+        }
+        return complexitySum;
     }
 
 }
