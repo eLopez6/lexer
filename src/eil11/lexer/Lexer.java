@@ -44,7 +44,7 @@ public class Lexer {
 
             // Checks for all types to see which token corresponds to correct Token Type
             for (Token.Type type : Token.Type.values()) {
-                match = matcher.group(type.getPattern());
+                match = matcher.group();
                 tokenType = type;
                 if (!match.equals(""))
                     break;
