@@ -1,5 +1,6 @@
 package eil11.lexer;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
@@ -60,18 +61,22 @@ public class Lexer {
         }
     }
 
-    public LocationalToken nextValid(Set<Token.Type> validTypes, Set<Token.Type> invalidTypes) throws ParserException {
-        LocationalToken locToken = next();
+    public Optional<LocationalToken> nextValid(Set<Token.Type> validTypes, Set<Token.Type> invalidTypes) throws ParserException {
+        LocationalToken locToken;
 
-        if (invalidTypes.contains(locToken.getTokenType()))
-            throw new ParserException(locToken, ParserException.ErrorCode.INVALID_TOKEN);
+        while (hasNext()) {
+            locToken = next();
 
-        if (validTypes.contains(locToken.getTokenType()))
-            return locToken;
-        else
-            return null;
+            if (invalidTypes.contains(locToken.getTokenType()))
+                throw new ParserException(locToken, ParserException.ErrorCode.INVALID_TOKEN);
 
-        // If contained in neither, do nothing. (No need for else here)
+            if (validTypes.contains(locToken.getTokenType()))
+                return Optional.ofNullable(locToken);
+
+            // do nothing if a neither valid nor invalid token is found
+        }
+
+        return Optional.empty();
     }
 
     /**
