@@ -10,7 +10,11 @@ public final class ParserException extends Exception {
     public enum ErrorCode {
         TOKEN_EXPECTED,
         INVALID_TOKEN,
-        TRAILING_INPUT
+        TRAILING_INPUT,
+        AND_EXPECTED,
+        OPEN_EXPECTED,
+        CLOSE_EXPECTED,
+        ID_EXPECTED
     }
 
     private final ErrorCode errorCode;
@@ -47,6 +51,14 @@ public final class ParserException extends Exception {
     public static void verify(Optional<LocationalToken> token) throws ParserException{
         if (token.equals(Optional.empty())) {
             throw new ParserException(ErrorCode.TOKEN_EXPECTED);
+        }
+    }
+
+    public final static void verify(Token.Type expectedType, LocationalToken token) throws ParserException {
+        if (expectedType != token.getTokenType()) {
+            if (expectedType.getErrorCode().isPresent()) {
+                throw new ParserException(expectedType.getErrorCode().get());
+            }
         }
     }
 

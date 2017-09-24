@@ -10,24 +10,26 @@ public final class Token {
     private static Map<Builder, Token> tokenMap = new HashMap<>();
 
     public enum Type {
-        NOT ("not", false, false),
-        AND ("and", false, true),
-        OR ("or", false, true),
-        OPEN ("\\(", false, false),
-        CLOSE ("\\)", false, false),
-        ID ("D+", true, false),
-        NUMBER ("(-)?\\d+", true, false),
-        BINARYOP ("[\\+\\-\\*\\/]", true, false),
-        WHITESPACE ("\\s+", false, false);
+        NOT ("not", false, false, Optional.empty()),
+        AND ("and", false, true, Optional.ofNullable(ParserException.ErrorCode.AND_EXPECTED)),
+        OR ("or", false, true, Optional.empty()),
+        OPEN ("\\(", false, false, Optional.ofNullable(ParserException.ErrorCode.OPEN_EXPECTED)),
+        CLOSE ("\\)", false, false, Optional.ofNullable(ParserException.ErrorCode.CLOSE_EXPECTED)),
+        ID ("D+", true, false, Optional.ofNullable(ParserException.ErrorCode.ID_EXPECTED)),
+        NUMBER ("(-)?\\d+", true, false, Optional.empty()),
+        BINARYOP ("[\\+\\-\\*\\/]", true, false, Optional.empty()),
+        WHITESPACE ("\\s+", false, false, Optional.empty());
 
         private final String pattern;
         private final Boolean hasData;
-        private boolean isComplex;
+        private final boolean isComplex;
+        private final Optional<ParserException.ErrorCode> errorCode;
 
-        Type (String pattern, Boolean hasData, boolean complex){
+        Type (String pattern, Boolean hasData, boolean complex, Optional<ParserException.ErrorCode> errorCode){
             this.pattern = pattern;
             this.hasData = hasData;
             this.isComplex = complex;
+            this.errorCode = errorCode;
         }
 
         public String getPattern() {
@@ -40,6 +42,10 @@ public final class Token {
 
         public boolean getIsComplex() {
             return isComplex;
+        }
+
+        public Optional<ParserException.ErrorCode> getErrorCode() {
+            return this.errorCode;
         }
     }
 
