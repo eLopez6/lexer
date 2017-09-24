@@ -10,23 +10,24 @@ public final class Token {
     private static Map<Builder, Token> tokenMap = new HashMap<>();
 
     public enum Type {
-        NOT ("(?i)not", false),
-        AND ("(?i)and", false),
-        OR ("(?i)or", false),
-        OPEN ("\\(", false),
-        CLOSE ("\\)", false),
-        ID ("D+", true),
-        NUMBER ("(-)?\\d+", true),
-        BINARYOP ("[\\+\\-\\*\\/]", true),
-        WHITESPACE ("(\\\\\\\\)?\\s+", false);
+        NOT ("not", false, false),
+        AND ("and", false, true),
+        OR ("or", false, true),
+        OPEN ("\\(", false, false),
+        CLOSE ("\\)", false, false),
+        ID ("D+", true, false),
+        NUMBER ("(-)?\\d+", true, false),
+        BINARYOP ("[\\+\\-\\*\\/]", true, false),
+        WHITESPACE ("\\s+", false, false);
 
         private final String pattern;
         private final Boolean hasData;
         private boolean isComplex;
 
-        Type (String pattern, Boolean hasData){
+        Type (String pattern, Boolean hasData, boolean complex){
             this.pattern = pattern;
             this.hasData = hasData;
+            this.isComplex = complex;
         }
 
         public String getPattern() {
@@ -51,38 +52,14 @@ public final class Token {
     }
 
     @Override
-    public String toString(){
-        if (this.getData().isPresent()) {
-            switch (getType()) {
-                case ID:
-                    return "ID(" + this.getData().get() + ")";
-                case NUMBER:
-                    return "NUMBER(" + this.getData().get() + ")";
-                case BINARYOP:
-                    return "BINARYOP(" + this.getData().get() + ")";
-                default:
-                    return null;
-            }
+    public String toString() {
+        String str;
+        str = type.name();
 
+        if (type.hasData) {
+            str += data.get();
         }
-        else {
-            switch (getType()) {
-                case NOT:
-                    return "NOT";
-                case AND:
-                    return "AND";
-                case OR:
-                    return "OR";
-                case WHITESPACE:
-                    return " ";
-                case OPEN:
-                    return "OPEN";
-                case CLOSE:
-                    return "CLOSE";
-                default:
-                    return null;
-            }
-        }
+        return str;
     }
 
     // Auto-generated
@@ -111,11 +88,6 @@ public final class Token {
             this.data = Optional.empty();
         else
             this.data = data;
-
-        // Setting the isComplex field
-        if (this.type == Type.AND || this.type == Type.OR) {
-            this.type.isComplex = true;
-        }
     }
 
 
