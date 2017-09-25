@@ -15,7 +15,7 @@ public final class Token {
         OR ("or", false, true, Optional.empty()),
         OPEN ("\\(", false, false, Optional.ofNullable(ParserException.ErrorCode.OPEN_EXPECTED)),
         CLOSE ("\\)", false, false, Optional.ofNullable(ParserException.ErrorCode.CLOSE_EXPECTED)),
-        ID ("D+", true, false, Optional.ofNullable(ParserException.ErrorCode.ID_EXPECTED)),
+        ID ("[a-z]+", true, false, Optional.ofNullable(ParserException.ErrorCode.ID_EXPECTED)),
         NUMBER ("(-)?\\d+", true, false, Optional.empty()),
         BINARYOP ("[\\+\\-\\*\\/]", true, false, Optional.empty()),
         WHITESPACE ("\\s+", false, false, Optional.empty());

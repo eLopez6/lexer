@@ -4,10 +4,8 @@ package eil11.test;
 import eil11.lexer.Lexer;
 import eil11.lexer.LocationalToken;
 import eil11.lexer.Token;
-import org.junit.Before;
 import org.junit.Test;
 
-import javax.xml.stream.Location;
 
 import java.util.HashSet;
 import java.util.Optional;

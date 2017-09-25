@@ -1,6 +1,7 @@
 package eil11.lexer;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 public final class DisjunctiveLexer {
@@ -23,6 +24,10 @@ public final class DisjunctiveLexer {
 
     public DisjunctiveLexer (String input) {
         this.lexer = new Lexer(input);
+    }
+
+    public Optional<LocationalToken> nextValid() throws ParserException {
+        return this.lexer.nextValid(validTypes, invalidTypes);
     }
 
 

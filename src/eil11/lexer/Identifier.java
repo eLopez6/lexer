@@ -15,7 +15,7 @@ public final class Identifier {
         this.id = id;
     }
 
-    private static class Builder {
+    public static class Builder {
         public static final Identifier build(LocationalToken token) throws ParserException {
             if (token.getTokenType() != Token.Type.ID) {
                 throw new ParserException(ParserException.ErrorCode.ID_EXPECTED);
