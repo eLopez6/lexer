@@ -21,9 +21,9 @@ public class CompoundFactor implements Factor {
     }
 
 
-    private static class Builder {
+    public static class Builder {
 
-        private static final CompoundFactor build(LocationalToken token,
+        public static final CompoundFactor build(LocationalToken token,
                                                   DisjunctiveLexer lexer) throws ParserException {
             Token.Type[] order = {Token.Type.OPEN, Token.Type.ID, Token.Type.AND, Token.Type.ID,
                                     Token.Type.CLOSE};
@@ -33,11 +33,6 @@ public class CompoundFactor implements Factor {
             Identifier left = null;
             Identifier right = null;
 
-
-            if (token.getTokenType() != order[orderIndex]) {
-                throw new ParserException(token, ParserException.ErrorCode.OPEN_EXPECTED);
-            }
-            orderIndex++;
 
             while (orderIndex < order.length) {
                 curToken = lexer.nextValid();
