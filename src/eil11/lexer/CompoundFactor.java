@@ -2,7 +2,7 @@ package eil11.lexer;
 
 import java.util.Optional;
 
-public class CompoundFactor {
+public class CompoundFactor implements Factor {
 
     private final Identifier leftExpression;
     private final Identifier rightExpression;

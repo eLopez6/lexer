@@ -1,6 +1,6 @@
 package eil11.lexer;
 
-public final class Identifier {
+public final class Identifier implements Factor {
 
     private final String id;
 
