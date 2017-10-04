@@ -15,15 +15,15 @@ public final class Identifier implements Factor {
         this.id = id;
     }
 
-    public static class Builder {
-        public static final Identifier build(LocationalToken token) throws ParserException {
-            if (token.getTokenType() != Token.Type.ID) {
-                throw new ParserException(ParserException.ErrorCode.ID_EXPECTED);
-            }
-            else {
-                return new Identifier(token.getTokenAncilData().get());
-            }
-        }
+    @Override
+    public ConjunctiveRepresentation conjunctiveRepresentation() {
+        return new ConjunctiveRepresentation(id, false);
     }
 
+    public static class Builder {
+        public static final Identifier build(LocationalToken token) throws ParserException {
+            ParserException.verify(token.getTokenType(), token);
+            return new Identifier(token.getTokenAncilData().get());
+        }
+    }
 }

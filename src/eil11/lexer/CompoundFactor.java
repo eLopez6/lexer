@@ -1,11 +1,10 @@
 package eil11.lexer;
 
-import java.util.Optional;
 
 public class CompoundFactor implements Factor {
 
-    private final Identifier leftExpression;
-    private final Identifier rightExpression;
+    private final DisjunctiveExpression leftExpression;
+    private final DisjunctiveExpression rightExpression;
 
     @Override
     public String toString() {
@@ -15,7 +14,18 @@ public class CompoundFactor implements Factor {
                 '}';
     }
 
-    private CompoundFactor(Identifier leftExpression, Identifier rightExpression) {
+    @Override
+    public ConjunctiveRepresentation conjunctiveRepresentation() {
+        StringBuilder expression = new StringBuilder();
+        String lExpress;
+        String rExpress;
+
+        if (leftExpression.getFactor().getClass() == Identifier.class)   // check for ID instead of CompoundFactor
+            lExpress = leftExpression.getFactor().toString();
+        return null;
+    }
+
+    private CompoundFactor(DisjunctiveExpression leftExpression, DisjunctiveExpression  rightExpression) {
         this.leftExpression = leftExpression;
         this.rightExpression = rightExpression;
     }
@@ -25,33 +35,30 @@ public class CompoundFactor implements Factor {
 
         public static final CompoundFactor build(LocationalToken token,
                                                   DisjunctiveLexer lexer) throws ParserException {
-            Token.Type[] order = {Token.Type.OPEN, Token.Type.ID, Token.Type.AND, Token.Type.ID,
-                                    Token.Type.CLOSE};
 
-            int orderIndex = 0;
-            Optional<LocationalToken> curToken;
-            Identifier left = null;
-            Identifier right = null;
+            DisjunctiveExpression  left = null;
+            DisjunctiveExpression  right = null;
 
 
-            while (orderIndex < order.length) {
-                curToken = lexer.nextValid();
-                if (curToken.get().getTokenType() != order[orderIndex]){
-                    throw new ParserException(order[orderIndex].getErrorCode().get());
-                }
+            // Compound factor: OPEN DisjunctiveExpression AND DisjunctiveExpression CLOSE
 
-                if (orderIndex == 1) {
-                    left = Identifier.Builder.build(curToken.get());
-                }
+            if (DisjunctiveExpression.Builder.checkForTokenType(Token.Type.OPEN, token)) {
+                left = DisjunctiveExpression.Builder.build(lexer.nextValid().get(), lexer);
+            }
 
-                if (orderIndex == 3) {
-                    right = Identifier.Builder.build(curToken.get());
-                }
+            verifyAndAdvance(Token.Type.AND, lexer);
 
-                orderIndex++;
+
+            if ((DisjunctiveExpression.Builder.checkForTokenType(Token.Type.OPEN, token))) {
+                right = DisjunctiveExpression.Builder.build(lexer.nextValid().get(), lexer);
             }
 
             return new CompoundFactor(left, right);
+        }
+
+        private static void verifyAndAdvance(Token.Type type, DisjunctiveLexer lexer)
+                throws ParserException{
+            ParserException.verify(type, lexer.nextValid().get());    // nextValid advances
         }
 
     }

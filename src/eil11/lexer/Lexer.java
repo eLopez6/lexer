@@ -19,18 +19,20 @@ public class Lexer {
 
         while (true) {
             // Add capturing group to Regex pattern
-            pattern.append("?<");
+            pattern.append("(?<");
             pattern.append(typeArr[i].name());
             pattern.append(">");
 
             // Add pattern
             pattern.append(typeArr[i].getPattern());
+            pattern.append(")");
             if (i == (typeArr.length - 1)) {
                 break;
             }
             pattern.append("|");
             i++;
         }
+        System.out.println(pattern.toString());
         tokenPatterns = Pattern.compile(pattern.toString());
     }
 
