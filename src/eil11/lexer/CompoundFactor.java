@@ -20,9 +20,26 @@ public class CompoundFactor implements Factor {
         String lExpress;
         String rExpress;
 
-        if (leftExpression.getFactor().getClass() == Identifier.class)   // check for ID instead of CompoundFactor
-            lExpress = leftExpression.getFactor().toString();
+        // Get if they are IDs
+        lExpress = getIDString(leftExpression);
+        rExpress = getIDString(rightExpression);
+
+        // If they are null, then the expressions were not IDs
+
+
+
+
+
         return null;
+    }
+
+    private String getIDString(DisjunctiveExpression express) {
+        if (express.getFactor().getClass() == Identifier.class) {
+            return express.getFactor().toString();
+        }
+        else {
+            return null;
+        }
     }
 
     private CompoundFactor(DisjunctiveExpression leftExpression, DisjunctiveExpression  rightExpression) {

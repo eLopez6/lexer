@@ -3,6 +3,7 @@ package eil11.test;
 
 import eil11.lexer.Lexer;
 import eil11.lexer.LocationalToken;
+import eil11.lexer.ParserException;
 import eil11.lexer.Token;
 import org.junit.Test;
 
@@ -30,7 +31,7 @@ public class LexerTest {
 
     @Test
     public void next() throws Exception {
-        String input = "and and and";
+        String input = "and or and";
         Lexer lexer = new Lexer(input);
 
         LocationalToken tok1 = lexer.next();
@@ -64,8 +65,14 @@ public class LexerTest {
 //        LocationalToken tok3 = lexer.nextValid(validTypes, invalidTypes).get();
         // Not sure how to show success here, but it does in fact throw exception
 
-        LocationalToken tok4 = lexer.nextValid(validTypes, invalidTypes).orElse(null);
-        assertNull(tok4);
+
+        LocationalToken tok4 = null;
+        try {
+            tok4 = lexer.nextValid(validTypes, invalidTypes).orElse(null);
+        }
+        catch (ParserException e) {
+            assertNull(tok4);
+        }
 
     }
 

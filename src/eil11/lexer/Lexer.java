@@ -19,7 +19,8 @@ public class Lexer {
 
         while (true) {
             // Add capturing group to Regex pattern
-            pattern.append("(?<");
+            pattern.append("(");
+            pattern.append("?<");
             pattern.append(typeArr[i].name());
             pattern.append(">");
 
@@ -32,7 +33,6 @@ public class Lexer {
             pattern.append("|");
             i++;
         }
-        System.out.println(pattern.toString());
         tokenPatterns = Pattern.compile(pattern.toString());
     }
 
@@ -42,7 +42,6 @@ public class Lexer {
 
     public Boolean hasNext() {
         if (matcher.find()) {
-            matcher.region(matcher.start(), matcher.end());
             return true;
         }
         else {
@@ -56,16 +55,26 @@ public class Lexer {
 
         // Checks for all types to see which token corresponds to correct Token Type
         for (Token.Type type : Token.Type.values()) {
-            match = matcher.group();
+            match = matcher.group(type.name());
             tokenType = type;
-            if (!match.equals(""))
+            if (match != null)
                 break;
         }
 
-        if (match.equals(""))
-            throw new ParserException(ParserException.ErrorCode.TOKEN_EXPECTED);
+        isTokenFound(match);
 
-        return Token.of(tokenType, match);
+        if (tokenType.getHasData()) {
+            return Token.of(tokenType, match);
+        }
+        else {
+            return  Token.of(tokenType, null);
+        }
+    }
+
+    private void isTokenFound(String match) throws ParserException {
+        if (match == null || match == "") {
+            throw new ParserException(ParserException.ErrorCode.TOKEN_EXPECTED);
+        }
     }
 
     public LocationalToken next() throws ParserException {
@@ -79,6 +88,7 @@ public class Lexer {
 
         while (hasNext()) {
             locToken = next();
+            System.out.println(locToken.getTokenType().name());
             if (invalidTypes.contains(locToken.getTokenType())) {
                 throw new ParserException(locToken, ParserException.ErrorCode.INVALID_TOKEN);
             }
