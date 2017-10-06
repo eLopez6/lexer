@@ -99,4 +99,9 @@ public class Lexer {
         }
         return Optional.empty();
     }
+
+    // Simply executes matcher.find(), to avoid exception on next call
+    protected void matcherFind() {
+        matcher.find();
+    }
 }

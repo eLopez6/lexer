@@ -11,27 +11,17 @@ public class CompoundFactor implements Factor {
         return ("(" + this.leftExpression.toString() + " and " + this.rightExpression.toString() + ")");
     }
 
-//    @Override
-//    public ConjunctiveRepresentation conjunctiveRepresentation() {
+    @Override
+    public ConjunctiveRepresentation conjunctiveRepresentation() {
 //        StringBuilder expression = new StringBuilder();
-//        String lExpress;
-//        String rExpress;
-//
-//        // Get if they are IDs
-//        lExpress = getIDString(leftExpression);
-//        rExpress = getIDString(rightExpression);
-//
-//        // If they are null, then the expressions were not IDs
-//        return null;
-//    }
+        String lExpress;
+        String rExpress;
 
-    private String getIDString(DisjunctiveExpression express) {
-        if (express.getFactor().getClass() == Identifier.class) {
-            return express.getFactor().toString();
-        }
-        else {
-            return null;
-        }
+        lExpress = leftExpression.negate().toString();
+        rExpress = rightExpression.negate().toString();
+
+        // If they are null, then the expressions were not IDs
+        return new ConjunctiveRepresentation((lExpress + " or " + rExpress), true);
     }
 
     private CompoundFactor(DisjunctiveExpression leftExpression, DisjunctiveExpression  rightExpression) {
@@ -51,7 +41,6 @@ public class CompoundFactor implements Factor {
             // Compound factor: OPEN DisjunctiveExpression AND DisjunctiveExpression CLOSE
             left = DisjunctiveExpression.Builder.build(token, lexer);
 
-            ParserException.verify(Token.Type.AND, lexer.nextValid().get());
             LocationalToken nextStart = lexer.nextValid().get();
 
 

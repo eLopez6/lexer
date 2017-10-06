@@ -57,6 +57,7 @@ public final class ParserException extends Exception {
     public final static void verify(Token.Type expectedType, LocationalToken token) throws ParserException {
         if (expectedType != token.getTokenType()) {
             if (expectedType.getErrorCode().isPresent()) {
+                System.out.println(token.getTokenType());
                 throw new ParserException(expectedType.getErrorCode().get());
             }
         }
