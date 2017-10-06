@@ -16,8 +16,10 @@ public class LexerRunner {
             expression = DisjunctiveExpression.Builder.build(lexer.nextValid().get(), lexer);
             System.out.println(expression.conjunctiveExpression());
         }
-        catch (ParserException e) {
+        catch (Exception e) {
             System.out.println("Error occurred in processing input. Make sure your input is a disjunction");
+            System.out.println("Disjunction is of this form: (FACTOR and FACTOR), where factor can be expanded");
+            System.out.println("For example, \"(a and b)\" is valid.");
         }
     }
 
