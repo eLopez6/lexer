@@ -20,7 +20,6 @@ public class DisjunctiveExpression {
 
     public final String conjunctiveExpression() throws ParserException {
         ConjunctiveRepresentation rep = factor.conjunctiveRepresentation();
-        System.out.println(rep.getRepresentation());
         Lexer lexer = new Lexer(rep.getRepresentation());
 
         if (isDoubleNegative(rep)) {
@@ -44,7 +43,6 @@ public class DisjunctiveExpression {
         do {
             lexer.matcherFind();
             tok = lexer.next();
-//            System.out.println(tok.getTokenType().name());
 
             switch (tok.getTokenType()) {
                 case NOT:
@@ -59,24 +57,6 @@ public class DisjunctiveExpression {
             }
         }
         while(lexer.hasNext());
-
-
-//
-//
-//        while (lexer.hasNext()) {
-//            tok = lexer.next();
-//
-//            switch (tok.getTokenType()) {
-//                case NOT:
-//                    break;
-//
-//                case OR:
-//                    sb.append("and");
-//                    break;
-//
-//                default:
-//                    sb.append(tokStringRep(tok));
-//            }
 
         sb.append(')');
         return sb.toString();
@@ -96,7 +76,7 @@ public class DisjunctiveExpression {
     }
 
     private boolean isDoubleNegative(ConjunctiveRepresentation rep) {
-        return (positive && rep.isNegation());
+        return (!positive && rep.isNegation());
     }
 
     private DisjunctiveExpression(Factor factor, boolean positive) {
