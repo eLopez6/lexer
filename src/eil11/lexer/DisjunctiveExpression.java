@@ -1,6 +1,5 @@
 package eil11.lexer;
 
-import java.util.Optional;
 
 public class DisjunctiveExpression {
 
@@ -19,18 +18,18 @@ public class DisjunctiveExpression {
         return new DisjunctiveExpression(factor, !positive);
     }
 
-    public final String conjunctiveExpression() {
-        ConjunctiveRepresentation rep = factor.conjunctiveRepresentation();
-
-        if (isDoubleNegative(rep)) {
-            // return the positive form
-        }
-        else {
-            // Return a negation of the expression
-        }
-        return null;
-
-    }
+//    public final String conjunctiveExpression() {
+//        ConjunctiveRepresentation rep = factor.conjunctiveRepresentation();
+//
+//        if (isDoubleNegative(rep)) {
+//            // return the positive form
+//        }
+//        else {
+//            // Return a negation of the expression
+//        }
+//        return null;
+//
+//    }
 
     private boolean isDoubleNegative(ConjunctiveRepresentation rep) {
         return (positive && rep.isNegation());
@@ -43,10 +42,11 @@ public class DisjunctiveExpression {
 
     @Override
     public String toString() {
-        return "DisjunctiveExpression{" +
-                "factor=" + factor +
-                ", positive=" + positive +
-                '}';
+        String not = "";
+        if (!positive) {
+            not = "not ";
+        }
+        return (not + factor.toString());
     }
 
 
@@ -57,17 +57,22 @@ public class DisjunctiveExpression {
             Factor factor;
             boolean positive;
 
-            Optional<LocationalToken> curToken;
+            LocationalToken curToken;
 
-            positive = !checkForNot(token);  // token should be generated from a nextValid() call
-
-            curToken = lexer.nextValid();
-
-            try {
-                factor = CompoundFactor.Builder.build(curToken.get(), lexer);
+            positive = !checkForNot(token);
+            if (token.getTokenType() == Token.Type.NOT) {
+                curToken = lexer.nextValid().get();
             }
-            catch (ParserException e) {
-                factor = Identifier.Builder.build(curToken.get());
+            else {
+                curToken = token;
+            }
+
+
+            if (curToken.getTokenType() == Token.Type.OPEN) {
+                factor = CompoundFactor.Builder.build(lexer.nextValid().get(), lexer);
+            }
+            else {
+                factor = Identifier.Builder.build(curToken);
             }
 
             return new DisjunctiveExpression(factor, positive);
@@ -75,12 +80,6 @@ public class DisjunctiveExpression {
 
         public static boolean checkForNot(LocationalToken token) {
             return token.getTokenType() == Token.Type.NOT;
-        }
-
-
-        public static boolean checkForTokenType(Token.Type type, LocationalToken token) throws ParserException {
-            ParserException.verify(type, token);
-            return true;
         }
     }
 

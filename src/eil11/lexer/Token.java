@@ -59,11 +59,10 @@ public final class Token {
 
     @Override
     public String toString() {
-        String str;
-        str = type.name();
+        String str = type.name();
 
         if (type.hasData) {
-            str += data.get();
+            str += ("(" + data.get() + ")");
         }
         return str;
     }

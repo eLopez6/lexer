@@ -6,9 +6,7 @@ public final class Identifier implements Factor {
 
     @Override
     public String toString() {
-        return "Identifier{" +
-                "id='" + id + '\'' +
-                '}';
+        return this.id;
     }
 
     private Identifier(String id) {

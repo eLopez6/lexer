@@ -88,14 +88,14 @@ public class Lexer {
 
         while (hasNext()) {
             locToken = next();
-            System.out.println(locToken.getTokenType().name());
-            if (invalidTypes.contains(locToken.getTokenType())) {
-                throw new ParserException(locToken, ParserException.ErrorCode.INVALID_TOKEN);
-            }
 
             if (validTypes.contains(locToken.getTokenType())) {
                 return Optional.of(locToken);
             }
+            else if (invalidTypes.contains(locToken)) {
+                throw new ParserException(ParserException.ErrorCode.INVALID_TOKEN);
+            }
+            else {}
         }
         return Optional.empty();
     }

@@ -8,30 +8,22 @@ public class CompoundFactor implements Factor {
 
     @Override
     public String toString() {
-        return "CompoundFactor{" +
-                "leftExpression=" + leftExpression.toString() +
-                ", rightExpression=" + rightExpression.toString() +
-                '}';
+        return ("(" + this.leftExpression.toString() + " and " + this.rightExpression.toString() + ")");
     }
 
-    @Override
-    public ConjunctiveRepresentation conjunctiveRepresentation() {
-        StringBuilder expression = new StringBuilder();
-        String lExpress;
-        String rExpress;
-
-        // Get if they are IDs
-        lExpress = getIDString(leftExpression);
-        rExpress = getIDString(rightExpression);
-
-        // If they are null, then the expressions were not IDs
-
-
-
-
-
-        return null;
-    }
+//    @Override
+//    public ConjunctiveRepresentation conjunctiveRepresentation() {
+//        StringBuilder expression = new StringBuilder();
+//        String lExpress;
+//        String rExpress;
+//
+//        // Get if they are IDs
+//        lExpress = getIDString(leftExpression);
+//        rExpress = getIDString(rightExpression);
+//
+//        // If they are null, then the expressions were not IDs
+//        return null;
+//    }
 
     private String getIDString(DisjunctiveExpression express) {
         if (express.getFactor().getClass() == Identifier.class) {
@@ -53,23 +45,17 @@ public class CompoundFactor implements Factor {
         public static final CompoundFactor build(LocationalToken token,
                                                   DisjunctiveLexer lexer) throws ParserException {
 
-            DisjunctiveExpression  left = null;
-            DisjunctiveExpression  right = null;
-
+            DisjunctiveExpression  left;
+            DisjunctiveExpression  right;
 
             // Compound factor: OPEN DisjunctiveExpression AND DisjunctiveExpression CLOSE
+            left = DisjunctiveExpression.Builder.build(token, lexer);
 
-            if (DisjunctiveExpression.Builder.checkForTokenType(Token.Type.OPEN, token)) {
-                left = DisjunctiveExpression.Builder.build(lexer.nextValid().get(), lexer);
-            }
-
-            verifyAndAdvance(Token.Type.AND, lexer);
+            ParserException.verify(Token.Type.AND, lexer.nextValid().get());
+            LocationalToken nextStart = lexer.nextValid().get();
 
 
-            if ((DisjunctiveExpression.Builder.checkForTokenType(Token.Type.OPEN, token))) {
-                right = DisjunctiveExpression.Builder.build(lexer.nextValid().get(), lexer);
-            }
-
+            right = DisjunctiveExpression.Builder.build(nextStart, lexer);
             return new CompoundFactor(left, right);
         }
 

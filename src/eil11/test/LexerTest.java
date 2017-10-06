@@ -31,16 +31,19 @@ public class LexerTest {
 
     @Test
     public void next() throws Exception {
-        String input = "and or and";
+        String input = "and and and";
         Lexer lexer = new Lexer(input);
 
+        lexer.hasNext();
         LocationalToken tok1 = lexer.next();
+        lexer.hasNext();
         LocationalToken tok2 = lexer.next();
+        lexer.hasNext();
         LocationalToken tok3 = lexer.next();
 
         assertNotEquals(tok1, tok2);
         assertNotEquals(tok1, tok3);
-        assertEquals(tok1.getTokenType(), tok2.getTokenType());
+        assertEquals(tok1.getTokenType(), tok3.getTokenType());
     }
 
     @Test
