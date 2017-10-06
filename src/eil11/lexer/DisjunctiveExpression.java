@@ -131,7 +131,7 @@ public class DisjunctiveExpression {
                 factor = Identifier.Builder.build(curToken);
             }
 
-            lexer.nextValid();
+            lexer.nextValid();      // This is what is causing the skip issue
             return new DisjunctiveExpression(factor, positive);
         }
 

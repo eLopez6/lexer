@@ -92,7 +92,7 @@ public class Lexer {
             if (validTypes.contains(locToken.getTokenType())) {
                 return Optional.of(locToken);
             }
-            else if (invalidTypes.contains(locToken)) {
+            else if (invalidTypes.contains(locToken.getTokenType())) {
                 throw new ParserException(ParserException.ErrorCode.INVALID_TOKEN);
             }
             else {}

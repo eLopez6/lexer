@@ -41,10 +41,10 @@ public class CompoundFactor implements Factor {
             // Compound factor: OPEN DisjunctiveExpression AND DisjunctiveExpression CLOSE
             left = DisjunctiveExpression.Builder.build(token, lexer);
 
-            LocationalToken nextStart = lexer.nextValid().get();
+//            LocationalToken nextStart = lexer.nextValid().get();
 
 
-            right = DisjunctiveExpression.Builder.build(nextStart, lexer);
+            right = DisjunctiveExpression.Builder.build(lexer.nextValid().get(), lexer);
             return new CompoundFactor(left, right);
         }
 
